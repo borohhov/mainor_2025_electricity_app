@@ -57,18 +57,28 @@ class HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 32.0),
-              child: Center(
-                  child: Column(
-                children: [
-                  Text(
-                    "Current Price ⚡",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  currentPriceWidget
-                ],
-              )),
+            body: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 32.0),
+                  child: Center(
+                      child: Column(
+                    children: [
+                      Text(
+                        "Current Price ⚡",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      currentPriceWidget
+                    ],
+                  )),
+                ),
+                Column(
+                    children: snapshot.data!.prices
+                        .map((pricePerHour) => Row(
+                              children: [Text(pricePerHour.time), Text(pricePerHour.price.toString())],
+                            ))
+                        .toList())
+              ],
             ),
           );
         });

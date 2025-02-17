@@ -1,5 +1,12 @@
 class ElectricityModel {
   double currentPrice;
+  List<PricePerHour> prices;
+  ElectricityModel(this.currentPrice, this.prices);
+}
 
-  ElectricityModel(this.currentPrice);
+class PricePerHour {
+  String time;
+  double price;
+
+  PricePerHour(this.time, this.price);
 }
