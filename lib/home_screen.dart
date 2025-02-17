@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mainor_2025_electricity_app/models/electricity_model.dart';
 import 'package:mainor_2025_electricity_app/services/nordpool_service.dart';
 
@@ -18,6 +19,10 @@ class HomeScreenState extends State<HomeScreen> {
   void initState() {
     electricityFuture = getCurrentPrice();
     super.initState();
+  }
+  String formatTime(String dateTime) {
+    DateTime parsedTime = DateTime.parse(dateTime);
+    return DateFormat.Hm().format(parsedTime); // Formats as HH:mm
   }
 
   @override
@@ -57,28 +62,66 @@ class HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
-            body: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32.0),
-                  child: Center(
-                      child: Column(
-                    children: [
-                      Text(
-                        "Current Price ⚡",
-                        style: TextStyle(fontSize: 18),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 32.0),
+                    child: Center(
+                        child: Column(
+                      children: [
+                        Text(
+                          "Current Price ⚡",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        currentPriceWidget
+                      ],
+                    )),
+                  ),
+            snapshot.hasData ? Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: NeverScrollableScrollPhysics(), // Prevent scrolling
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width, // Stretch table
+                  child: DataTable(
+                    columnSpacing: 30, // Adjust spacing between columns
+                    dataRowMinHeight: 25, // Reduce row height
+                    dataRowMaxHeight: 30,
+                    headingRowHeight: 40, // Reduce header height
+                    columns: [
+                      DataColumn(
+                        label: Text("Time", style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
-                      currentPriceWidget
+                      DataColumn(
+                        label: Container(
+                          alignment: Alignment.centerRight, // Align column header properly
+                          width: 80, // Ensure alignment matches data cells
+                          child: Text("Price (€)", style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ),
                     ],
-                  )),
+                    rows: snapshot.data!.prices.map((pricePerHour) {
+                      return DataRow(cells: [
+                        DataCell(Text(formatTime(pricePerHour.time), style: TextStyle(fontSize: 14))),
+                        DataCell(
+                          Container(
+                            alignment: Alignment.centerRight, // Ensure right alignment
+                            width: 80, // Match header width
+                            child: Text("${pricePerHour.price.toStringAsFixed(2)} €", style: TextStyle(fontSize: 14)),
+                          ),
+                        ),
+                      ]);
+                    }).toList(),
+                  ),
                 ),
-                Column(
-                    children: snapshot.data!.prices
-                        .map((pricePerHour) => Row(
-                              children: [Text(pricePerHour.time), Text(pricePerHour.price.toString())],
-                            ))
-                        .toList())
-              ],
+              ),
+            )
+
+                : Center(child: Text("No data available"))
+                ],
+              ),
             ),
           );
         });

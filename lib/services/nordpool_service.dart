@@ -10,7 +10,7 @@ Future<ElectricityModel> getCurrentPrice() async {
   final start = DateTime(now.year, now.month, now.day, now.hour, 0, 0);
   final end = start.add(Duration(hours: 12));
 
-  final dateFormat = DateFormat("yyyy-MM-dd'T'HH'%3A'mm'%3A'ss.SSS'Z'");
+  final dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
   final startParam = dateFormat.format(start);
   final endParam = dateFormat.format(end);
 
