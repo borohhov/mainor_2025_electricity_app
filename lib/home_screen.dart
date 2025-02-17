@@ -2,20 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:mainor_2025_electricity_app/models/electricity_model.dart';
 import 'package:mainor_2025_electricity_app/services/nordpool_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+
   const HomeScreen({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return HomeScreenState();
+  }
+
+}
+
+
+class HomeScreenState extends State<HomeScreen> {
+  late Future<ElectricityModel> electricityFuture;
+
+  @override
+  void initState() {
+    electricityFuture = getCurrentPrice();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Electricity Price"),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(child: Icon(Icons.refresh),
+            onTap: () {
+              setState(() {
+                electricityFuture = getCurrentPrice();
+              });
+            },
+            ),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 32.0),
         child: Center(
           child: FutureBuilder<ElectricityModel>(
-              future: getCurrentPrice(),
+              future: electricityFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Text("Loading...");
