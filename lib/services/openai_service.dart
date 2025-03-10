@@ -1,9 +1,9 @@
 
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-// TODO: migrate to env variables for security
-const String apiKey = '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';
+String apiKey = dotenv.env['OPENAI_KEY'] ?? "";
 
 Future<String> getPriceAnalysis(String prompt) async {
   const String endpoint = "https://api.openai.com/v1/chat/completions";
