@@ -26,10 +26,11 @@ Future<ElectricityModel> getCurrentPrice() async {
       List<dynamic> pricesMap = (jsonResponse['data']['ee'] as List<dynamic>);
       for(int i = 0; i < pricesMap.length; i++ ) {
         int timestamp = pricesMap[i]['timestamp'];
-        String date = dateFormat.format(DateTime.fromMillisecondsSinceEpoch(timestamp*1000));
+        String date = dateFormat.format(DateTime.fromMillisecondsSinceEpoch(timestamp*1000 - 7_200_000) );
         prices.add(PricePerHour(date, pricesMap[i]['price']));
       }
       ElectricityModel elModel = ElectricityModel(price, prices);
+      String str = elModel.toString();
       return elModel;
     }
   }
