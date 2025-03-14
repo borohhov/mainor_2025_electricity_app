@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mainor_2025_electricity_app/models/electricity_model.dart';
+import 'package:mainor_2025_electricity_app/screens/graph_screen.dart';
 import 'package:mainor_2025_electricity_app/services/nordpool_service.dart';
 import 'package:mainor_2025_electricity_app/services/openai_service.dart';
 
@@ -128,6 +129,11 @@ class HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+            floatingActionButton: FloatingActionButton(onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const GraphScreen()),
+              );
+            }, child: Icon(Icons.add_chart_sharp),),
           );
         });
   }
